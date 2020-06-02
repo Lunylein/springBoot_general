@@ -1,4 +1,4 @@
-package com.boot.nami;
+package com.nami;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class NamiApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(NamiApplication.class, args);
 	}
 
