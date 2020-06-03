@@ -19,7 +19,8 @@ public class ProductDataAccessService implements ProductDao{
 
     @Override
     public int insertProduct(UUID id, Product product) {
-        return 0;
+        String sql = "INSERT INTO product(id, name) VALUES(?,?)";
+        return jdbcTemplate.update(sql, id, product.getName());
     }
 
     @Override
@@ -34,16 +35,25 @@ public class ProductDataAccessService implements ProductDao{
 
     @Override
     public Optional<Product> selectProductById(UUID id) {
-        return Optional.empty();
+        String sql = "Select id, name FROM product WHERE id = ?";
+        Product product =  jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) ->{
+            UUID productId = UUID.fromString(resultSet.getString("id"));
+            String name = resultSet.getString("name");
+            return new Product(productId, name);
+        });
+        return Optional.ofNullable(product);
     }
 
     @Override
     public int deleteProductById(UUID id) {
-        return 0;
+        String sql = "DELETE FROM product WHERE id = ?";
+        Object[] args = new Object[] {id};
+        return jdbcTemplate.update(sql, args);
     }
 
     @Override
     public int updateProductById(UUID id, Product product) {
-        return 0;
+        String sql = "UPDATE product set name = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, product.getName(), id);
     }
 }
