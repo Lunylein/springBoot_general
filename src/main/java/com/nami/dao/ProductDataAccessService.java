@@ -1,6 +1,7 @@
 package com.nami.dao;
 
 import com.nami.model.Product;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,6 +10,13 @@ import java.util.UUID;
 
 @Repository("postgres")
 public class ProductDataAccessService implements ProductDao{
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ProductDataAccessService(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public int insertProduct(UUID id, Product product) {
         return 0;
@@ -16,7 +24,12 @@ public class ProductDataAccessService implements ProductDao{
 
     @Override
     public List<Product> selectAllProducts() {
-        return List.of(new Product(UUID.randomUUID(), "FROM POSTGRES DB"));
+        String sql = "Select id, name FROM product";
+        return jdbcTemplate.query(sql, (resultSet, i) ->{
+            UUID id = UUID.fromString(resultSet.getString("id"));
+            String name = resultSet.getString("name");
+            return new Product(id, name);
+        });
     }
 
     @Override
